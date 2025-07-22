@@ -2,9 +2,14 @@
 
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { signupUser } from "@/lib/api";
+import type { SignupFormData } from "@/types/auth";
 
 const SignupPage = () => {
-  const [formData, setFormData] = React.useState({
+  const router = useRouter();
+  const [formData, setFormData] = React.useState<SignupFormData>({
     username: "",
     email: "",
     password: "",
@@ -12,20 +17,28 @@ const SignupPage = () => {
   });
   const [error, setError] = React.useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (error) setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-    // TODO: implement signup logic (API call, validation, etc.)
-    console.log("Signing up", formData);
+
+    try {
+      await signupUser(formData);
+      toast.success("Signup successful!");
+      router.push("/login");
+    } catch (error) {
+      toast.error("An error occurred during signup");
+      setError(error instanceof Error ? error.message : "Signup failed");
+      console.error("Signup error:", error);
+    }
   };
 
   return (

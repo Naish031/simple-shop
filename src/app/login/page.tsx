@@ -2,9 +2,14 @@
 
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { loginUser } from "@/lib/api";
+import type { LoginFormData } from "@/types/auth";
 
 const LoginPage = () => {
-  const [formData, setFormData] = React.useState({
+  const router = useRouter();
+  const [formData, setFormData] = React.useState<LoginFormData>({
     email: "",
     password: "",
   });
@@ -16,19 +21,30 @@ const LoginPage = () => {
     if (error) setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: implement login logic (API call, validation, etc.)
+
     if (!formData.email || !formData.password) {
       setError("Please fill in both fields");
       return;
     }
-    console.log("Logging in", formData);
+
+    try {
+      await loginUser(formData);
+      toast.success("Login successful!");
+      router.push("/dashboard");
+    } catch (error) {
+      toast.error("An error occurred during login");
+      setError(error instanceof Error ? error.message : "Login failed");
+      console.error("Login error:", error);
+    }
   };
 
   return (
     <div className="max-w-md mx-auto mt-12 p-8 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-bold text-center mb-6">Log In to Your Account</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">
+        Log In to Your Account
+      </h2>
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
