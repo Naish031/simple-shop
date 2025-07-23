@@ -27,3 +27,5 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: ["/", "/login", "/register", "/dashboard"],
 };
+
+export { auth } from "../auth";

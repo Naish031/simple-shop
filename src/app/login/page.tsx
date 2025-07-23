@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { loginUser } from "@/lib/api";
 import type { LoginFormData } from "@/types/auth";
+import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -38,6 +40,10 @@ const LoginPage = () => {
       setError(error instanceof Error ? error.message : "Login failed");
       console.error("Login error:", error);
     }
+  };
+
+  const handleGoogleLogin = async () => {
+    await signIn("google", { callbackUrl: "/dashboard" });
   };
 
   return (
@@ -77,6 +83,23 @@ const LoginPage = () => {
         >
           Log In
         </button>
+
+        <hr />
+        <div className="mt-4 text-center flex items-center justify-center">
+          <button
+            onClick={handleGoogleLogin}
+            className="flex items-center justify-center w-full py-2 mt-4 border border-gray-300 rounded hover:bg-gray-100 transition cursor-pointer"
+          >
+            <Image
+              src={"/google.svg"}
+              alt="Google Icon"
+              width={20}
+              height={20}
+              className="mr-2"
+            />
+            Continue with Google
+          </button>
+        </div>
       </form>
       <p className="mt-4 text-center text-sm">
         Don’t have an account?{" "}
