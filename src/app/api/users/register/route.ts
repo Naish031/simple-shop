@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     const requestBody = await request.json();
     const { username, email, password, confirmPassword } = requestBody;
 
-    console.log("Received signup request:", requestBody);
+    console.log("Received register request:", requestBody);
 
     // validation here
     if (!username || !email || !password) {
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error: Error | unknown) {
-    console.error("Error in POST /api/users/signup:", error);
+    console.error("Error in POST /api/users/register:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 }

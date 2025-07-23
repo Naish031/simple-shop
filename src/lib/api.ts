@@ -1,10 +1,10 @@
-import type { LoginFormData, SignupFormData } from "@/types/auth";
+import type { LoginFormData, RegisterFormData } from "@/types/auth";
 
-export async function signupUser(formData: SignupFormData) {
+export async function registerUser(formData: RegisterFormData) {
   // Removing confirmPassword from the data to send
   const { confirmPassword, ...dataToSend } = formData;
 
-  const response = await fetch("/api/users/signup", {
+  const response = await fetch("/api/users/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(dataToSend),
@@ -12,7 +12,7 @@ export async function signupUser(formData: SignupFormData) {
 
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data.message || data.error || "Signup failed");
+    throw new Error(data.message || data.error || "Registration failed");
   }
   return data;
 }

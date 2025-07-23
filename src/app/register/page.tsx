@@ -4,12 +4,12 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { signupUser } from "@/lib/api";
-import type { SignupFormData } from "@/types/auth";
+import { registerUser } from "@/lib/api";
+import type { RegisterFormData } from "@/types/auth";
 
-const SignupPage = () => {
+const RegisterPage = () => {
   const router = useRouter();
-  const [formData, setFormData] = React.useState<SignupFormData>({
+  const [formData, setFormData] = React.useState<RegisterFormData>({
     username: "",
     email: "",
     password: "",
@@ -31,13 +31,13 @@ const SignupPage = () => {
     }
 
     try {
-      await signupUser(formData);
-      toast.success("Signup successful!");
+      await registerUser(formData);
+      toast.success("Registration successful!");
       router.push("/login");
     } catch (error) {
-      toast.error("An error occurred during signup");
-      setError(error instanceof Error ? error.message : "Signup failed");
-      console.error("Signup error:", error);
+      toast.error("An error occurred during registration");
+      setError(error instanceof Error ? error.message : "Registration failed");
+      console.error("Registration error:", error);
     }
   };
 
@@ -113,4 +113,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default RegisterPage;
