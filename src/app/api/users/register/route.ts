@@ -8,7 +8,7 @@ connectDB();
 export async function POST(request: NextRequest) {
   try {
     const requestBody = await request.json();
-    const { username, email, password, confirmPassword } = requestBody;
+    const { username, email, password } = requestBody;
 
     console.log("Received register request:", requestBody);
 
@@ -19,7 +19,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
 
     // Check if user already exists
     const existingUser = await User.findOne({

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  // Clear the session cookie
   try {
     const response = NextResponse.json({
       message: "Logout successful",
