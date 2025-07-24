@@ -1,31 +1,31 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const token = request.cookies.get("token")?.value;
+export async function middleware(request: NextRequest) {
+  const token = await getToken({ req: request });
 
-  const isAuthRoute =
-    pathname.startsWith("/login") || pathname.startsWith("/register");
+  console.log("token", token);
 
-  const isProtectedRoute = pathname.startsWith("/dashboard");
-
-  if (!token && isProtectedRoute) {
-    // User not authenticated and trying to access protected route
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
-  if (token && isAuthRoute) {
-    // User authenticated but trying to access auth routes
+  if (
+    token &&
+    (request.nextUrl.pathname.startsWith("/login") ||
+      request.nextUrl.pathname.startsWith("/register"))
+  ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // Allow access otherwise
+  if (
+    !token &&
+    !request.nextUrl.pathname.startsWith("/login") &&
+    !request.nextUrl.pathname.startsWith("/register")
+  ) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/", "/login", "/register", "/dashboard"],
+  matcher: ["/login", "/register", "/dashboard/:path*", "/"],
 };
-
-export { auth } from "../auth";
