@@ -2,18 +2,25 @@ import mongoose from "mongoose";
 
 export const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI as string);
-    const connection = mongoose.connection;
+    if (mongoose.connections[0].readyState) return;
 
-    connection.on("connected", () => {
-      console.log("MongoDB connection successful");
-    });
+    const { connection } = await mongoose.connect(
+      process.env.MONGODB_URI as string,
+      {
+        dbName: "simple-shop",
+      }
+    );
+
+    if (connection.readyState === 1) {
+      return Promise.resolve(true);
+    }
 
     connection.on("error", (err) => {
       console.error("MongoDB connection error:", err);
     });
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
-    process.exit(1);
+
+    return Promise.reject(error);
   }
 };

@@ -1,4 +1,4 @@
-import type { RegisterFormData } from "@/types/auth";
+import type { RegisterFormData } from "@/types/auth.types";
 
 export async function registerUser(formData: RegisterFormData) {
   // Removing confirmPassword from the data to send

@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import type { LoginFormData } from "@/types/auth";
+import type { LoginFormData } from "@/types/auth.types";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
 
@@ -30,19 +30,19 @@ const LoginPage = () => {
       return;
     }
 
-    const result = await signIn("credentials", {
-      redirect: false,
+    const result = await signIn("Credentials", {
+      redirect: false, // handling redirection manually
       email: formData.email,
       password: formData.password,
-      callbackUrl: "/dashboard",
     });
 
-    if (result?.ok) {
-      toast.success("Login successful!");
-      router.push(result.url || "/dashboard");
-    } else if (result?.error) {
+    if (result?.error) {
       setError(result.error);
       toast.error(result.error);
+    } else {
+      toast.success("Login successful!");
+      router.push("/dashboard");
+      router.refresh();
     }
   };
 
@@ -51,20 +51,20 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="
+    <div
+      className="
       max-w-md mx-auto mt-12 p-8
       bg-white dark:bg-gray-800
       shadow-lg dark:shadow-gray-700
       rounded-lg
-    ">
+    "
+    >
       <h2 className="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">
         Log In to Your Account
       </h2>
 
       {error && (
-        <p className="text-red-600 dark:text-red-400 text-sm mb-4">
-          {error}
-        </p>
+        <p className="text-red-600 dark:text-red-400 text-sm mb-4">{error}</p>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -154,7 +154,10 @@ const LoginPage = () => {
 
       <p className="mt-4 text-center text-sm text-gray-700 dark:text-gray-300">
         Don’t have an account?{" "}
-        <Link href="/register" className="text-blue-600 dark:text-blue-400 hover:underline">
+        <Link
+          href="/register"
+          className="text-blue-600 dark:text-blue-400 hover:underline"
+        >
           Register Here
         </Link>
       </p>

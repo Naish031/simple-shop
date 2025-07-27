@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { registerUser } from "@/lib/api";
-import type { RegisterFormData } from "@/types/auth";
+import type { RegisterFormData } from "@/types/auth.types";
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -47,15 +47,11 @@ const RegisterPage = () => {
         Create an Account
       </h2>
       {error && (
-        <p className="text-red-600 dark:text-red-400 text-sm mb-4">
-          {error}
-        </p>
+        <p className="text-red-600 dark:text-red-400 text-sm mb-4">{error}</p>
       )}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1">
-            Full Name
-          </label>
+          <label className="block text-sm font-medium mb-1">Full Name</label>
           <input
             type="text"
             name="username"

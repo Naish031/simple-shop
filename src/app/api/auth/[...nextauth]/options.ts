@@ -1,8 +1,8 @@
-import { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+import type { NextAuthOptions } from "next-auth";
+import credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
-import { connectDB } from "@/db";
+import { connectDB } from "@/db/index";
 import User from "@/models/user.models";
 
 export const authOptions: NextAuthOptions = {
@@ -11,7 +11,7 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.AUTH_GOOGLE_ID as string,
       clientSecret: process.env.AUTH_GOOGLE_SECRET as string,
     }),
-    CredentialsProvider({
+    credentials({
       id: "Credentials",
       name: "Credentials",
       credentials: {
@@ -23,7 +23,8 @@ export const authOptions: NextAuthOptions = {
 
         const user = await User.findOne({
           email: credentials?.email,
-        });
+        }).select("+password");
+
         if (!user) throw new Error("No user found");
 
         const isPasswordValid = await bcrypt.compare(
@@ -32,16 +33,14 @@ export const authOptions: NextAuthOptions = {
         );
         if (!isPasswordValid) throw new Error("Invalid password");
 
-        return {
-          id: user._id.toString(),
-          email: user.email,
-          username: user.username,
-        };
+        return user
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
+      console.log("JWT callback - user:", user);
+
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -50,6 +49,8 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
+      console.log("Session callback - token:", token);
+
       if (token && session.user) {
         session.user.id = token.id as string;
         session.user.email = token.email as string;
@@ -57,11 +58,17 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
   },
   secret: process.env.AUTH_SECRET,
   session: {
     strategy: "jwt",
   },
+  debug: process.env.NODE_ENV === "development",
   pages: {
     signIn: "/login",
   },

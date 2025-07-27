@@ -3,23 +3,20 @@ import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 export async function middleware(request: NextRequest) {
-  const token = await getToken({ req: request });
+  const { pathname } = request.nextUrl;
+  const publicRoutes = ["/login", "/register"];
+  const token = await getToken({
+    req: request,
+    secret: process.env.AUTH_SECRET,
+  });
 
   console.log("token", token);
 
-  if (
-    token &&
-    (request.nextUrl.pathname.startsWith("/login") ||
-      request.nextUrl.pathname.startsWith("/register"))
-  ) {
+  if (token && publicRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  if (
-    !token &&
-    !request.nextUrl.pathname.startsWith("/login") &&
-    !request.nextUrl.pathname.startsWith("/register")
-  ) {
+  if (!token && !publicRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
