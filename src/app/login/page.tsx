@@ -30,7 +30,7 @@ const LoginPage = () => {
       return;
     }
 
-    const result = await signIn("Credentials", {
+    const result = await signIn("credentials", {
       redirect: false, // handling redirection manually
       email: formData.email,
       password: formData.password,

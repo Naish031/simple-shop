@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
     secret: process.env.AUTH_SECRET,
   });
 
-  console.log("token", token);
+  // console.log("token", token);
 
   if (token && publicRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL("/dashboard", request.url));

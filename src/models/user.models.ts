@@ -18,7 +18,8 @@ const UserSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: [true, "Password is required"],
+      select: false,
       minlength: [6, "Password must be at least 6 characters"],
     },
     isVerified: {

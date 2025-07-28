@@ -12,8 +12,8 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.AUTH_GOOGLE_SECRET as string,
     }),
     credentials({
-      id: "Credentials",
-      name: "Credentials",
+      id: "credentials",
+      name: "credentials",
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
@@ -27,17 +27,56 @@ export const authOptions: NextAuthOptions = {
 
         if (!user) throw new Error("No user found");
 
+        if (!user.password) {
+          throw new Error(
+            "This account was created via Google. Please log in with Google."
+          );
+        }
+
         const isPasswordValid = await bcrypt.compare(
           credentials?.password as string,
           user.password
         );
         if (!isPasswordValid) throw new Error("Invalid password");
 
-        return user
+        return user;
       },
     }),
   ],
   callbacks: {
+    async signIn({ user, account, profile }) {
+      if (account?.provider === "google") {
+        if (!profile?.email)
+          throw new Error("Email is required for Google sign-in");
+
+        await connectDB();
+        const existingUser = await User.findOne({ email: profile.email });
+
+        if (existingUser) {
+          if (existingUser?.password) {
+            throw new Error(
+              "An account with this email already exists. Please sign in using your email and password."
+            );
+          }
+
+          // Login okay — assign info to user
+          user.id = existingUser._id.toString();
+          user.username = existingUser.username;
+        } else {
+          // New Google user — create record
+          const newUser = await User.create({
+            username: profile.name || profile.email.split("@")[0],
+            email: profile.email,
+            isVerified: true,
+          });
+
+          user.id = newUser._id.toString();
+          user.username = newUser.username;
+        }
+      }
+
+      return true;
+    },
     async jwt({ token, user }) {
       console.log("JWT callback - user:", user);
 
@@ -68,8 +107,8 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  debug: process.env.NODE_ENV === "development",
   pages: {
     signIn: "/login",
   },
+  debug: process.env.NODE_ENV === "development",
 };
