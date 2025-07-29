@@ -46,11 +46,8 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account, profile }) {
       if (account?.provider === "google") {
-        if (!profile?.email)
-          throw new Error("Email is required for Google sign-in");
-
         await connectDB();
-        const existingUser = await User.findOne({ email: profile.email });
+        const existingUser = await User.findOne({ email: profile?.email });
 
         if (existingUser) {
           if (existingUser?.password) {
@@ -59,14 +56,12 @@ export const authOptions: NextAuthOptions = {
             );
           }
 
-          // Login okay — assign info to user
           user.id = existingUser._id.toString();
           user.username = existingUser.username;
         } else {
-          // New Google user — create record
           const newUser = await User.create({
-            username: profile.name || profile.email.split("@")[0],
-            email: profile.email,
+            username: profile?.name || profile?.email?.split("@")[0],
+            email: profile?.email,
             isVerified: true,
           });
 

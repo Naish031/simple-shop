@@ -10,8 +10,6 @@ export async function POST(request: NextRequest) {
     const requestBody = await request.json();
     const { username, email, password } = requestBody;
 
-    console.log("Received register request:", requestBody);
-
     // validation here
     if (!username || !email || !password) {
       return NextResponse.json(

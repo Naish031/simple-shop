@@ -10,8 +10,6 @@ const Dashboard: React.FC = () => {
 
   const router = useRouter();
 
-  console.log("Session Data:", session);
-
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
