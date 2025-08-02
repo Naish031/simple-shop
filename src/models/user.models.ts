@@ -22,14 +22,21 @@ const UserSchema = new Schema(
       select: false,
       minlength: [6, "Password must be at least 6 characters"],
     },
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
+    // User Role
     role: {
       type: String,
       enum: ["user", "admin"],
       default: "user",
+    },
+    // Email Verification
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    // Admin approval
+    isApproved: {
+      type: Boolean,
+      default: false,
     },
     forgotPasswordToken: {
       type: String,

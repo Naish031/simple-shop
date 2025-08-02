@@ -2,7 +2,7 @@ import type { NextAuthOptions } from "next-auth";
 import credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
-import { connectDB } from "@/db/index";
+import { connectDB } from "@/lib/db";
 import User from "@/models/user.models";
 
 export const authOptions: NextAuthOptions = {
@@ -76,9 +76,10 @@ export const authOptions: NextAuthOptions = {
       console.log("JWT callback - user:", user);
 
       if (user) {
-        token.id = user.id;
+        token.id = user._id;
         token.email = user.email;
         token.username = user.username;
+        token.role = user.role;
       }
       return token;
     },
@@ -89,6 +90,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string;
         session.user.email = token.email as string;
         session.user.name = token.username as string;
+        session.user.role = token.role as string;
       }
       return session;
     },
@@ -101,7 +103,9 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.AUTH_SECRET,
   session: {
     strategy: "jwt",
+    maxAge: 7 * 24 * 60 * 60, // for 1 day
   },
+
   pages: {
     signIn: "/login",
   },
