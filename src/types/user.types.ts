@@ -1,16 +1,17 @@
-export interface UserDocument {
-  _id: string;
+import type { Types } from "mongoose";
+
+export interface MongooseUser {
+  _id: Types.ObjectId;
   username: string;
   email: string;
-  password: string;
-  phone?: string;
-  image?: string;
-  isVerified?: boolean;
-  role?: "user" | "admin";
+  role: "admin" | "user";
+  isVerified: boolean;
+  isApproved: boolean;
+  password?: string;
   forgotPasswordToken?: string | null;
   forgotPasswordExpiry?: Date | null;
   verifyToken?: string | null;
   verifyTokenExpiry?: Date | null;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
