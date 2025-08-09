@@ -1,3 +1,5 @@
+// src/app/admin/users/components/EditUserModal.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -17,18 +19,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { User } from "@/app/admin/users/columns";
+import { UserTable } from "@/types/user.types";
 import toast from "react-hot-toast";
 
 interface EditUserModalProps {
-  user: User | null;
+  user: UserTable | null;
   onClose: () => void;
   onUpdate: () => void;
 }
 
 export function EditUserModal({ user, onClose, onUpdate }: EditUserModalProps) {
   const [username, setUsername] = useState(user?.username || "");
-  const [role, setRole] = useState<User["role"]>(user?.role || "user");
+  const [role, setRole] = useState<UserTable["role"]>(user?.role || "user");
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -85,7 +87,7 @@ export function EditUserModal({ user, onClose, onUpdate }: EditUserModalProps) {
             <Label htmlFor="role">Role</Label>
             <Select
               value={role}
-              onValueChange={(value) => setRole(value as User["role"])}
+              onValueChange={(value) => setRole(value as UserTable["role"])}
             >
               <SelectTrigger id="role">
                 <SelectValue placeholder="Select a role" />

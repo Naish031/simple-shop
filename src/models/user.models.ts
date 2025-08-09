@@ -1,9 +1,9 @@
-import type { MongooseUser } from "@/types/user.types";
 import { Schema, models, model, Document } from "mongoose";
+import type { MongooseUser } from "@/types/user.types";
 
 export type UserDocument = MongooseUser & Document;
 
-const UserSchema = new Schema(
+const UserSchema = new Schema<UserDocument>(
   {
     username: {
       type: String,
@@ -59,5 +59,4 @@ const UserSchema = new Schema(
 );
 
 const User = models?.User || model<UserDocument>("User", UserSchema);
-
 export default User;

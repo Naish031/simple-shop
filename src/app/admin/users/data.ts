@@ -1,14 +1,14 @@
+// src/app/admin/users/data.ts
 import User from "@/models/user.models";
-import { User as UserTypes } from "./columns";
+import { UserTable } from "@/types/user.types";
 import { connectDB } from "@/lib/db";
 import type { MongooseUser } from "@/types/user.types";
 
 
 
-export async function getUsers(): Promise<UserTypes[]> {
+export async function getUsers(): Promise<UserTable[]> {
   await connectDB();
   const users = await User.find().lean<MongooseUser[]>().exec();
-
 
   if (!users || users.length === 0) {
     return [];

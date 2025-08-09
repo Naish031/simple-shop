@@ -15,3 +15,13 @@ export interface MongooseUser {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+
+export type UserTable = {
+  id: string;
+  username: string;
+  email: string;
+  role: "admin" | "user";
+  isVerified: boolean;
+  isApproved: boolean;
+};

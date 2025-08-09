@@ -68,7 +68,7 @@ export async function DELETE(
     return errorResponse("Unauthorized", 401);
   }
 
-  const { id } = params;
+  const { id } = await params;
 
   try {
     const deletedUser = await User.findByIdAndDelete(id);
