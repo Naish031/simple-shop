@@ -1,4 +1,3 @@
-// src/app/admin/inventory/data.ts
 import Inventory from "@/models/inventory.model";
 import type { InventoryTableItem } from "@/types/inventory.types";
 import { connectDB } from "@/lib/db";

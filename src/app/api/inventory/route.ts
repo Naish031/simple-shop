@@ -1,12 +1,9 @@
-// POST new item, GET all items
-
-// /api/inventory/route.ts
 import { NextResponse } from "next/server";
 import Inventory from "@/models/inventory.model";
 import { connectDB } from "@/lib/db";
 import { requireAdmin, getSession } from "@/lib/auth";
 
-// GET /api/inventory → get all inventory items (auth required)
+
 export async function GET() {
   await connectDB();
   try {
@@ -17,7 +14,6 @@ export async function GET() {
 
     const items = await Inventory.find().sort({ createdAt: -1 });
 
-    // Return 200 with [] when empty for a friendlier UX
     if (!items || items.length === 0) {
       return NextResponse.json([], { status: 200 });
     }
@@ -32,7 +28,6 @@ export async function GET() {
       };
     });
 
-    // Return the items as json
     return NextResponse.json(itemsPlain, { status: 200 });
   } catch {
     return NextResponse.json(
@@ -42,7 +37,6 @@ export async function GET() {
   }
 }
 
-// POST /api/inventory → create new inventory item (admin only)
 export async function POST(req: Request) {
   await connectDB();
 

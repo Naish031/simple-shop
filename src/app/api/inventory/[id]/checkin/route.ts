@@ -1,4 +1,3 @@
-// src/app/api/inventory/[id]/checkin/route.ts
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Inventory from "@/models/inventory.model";
@@ -37,7 +36,6 @@ export async function POST(
     item.quantity += quantity;
     await item.save();
 
-    // Create a log
     await Log.create({
       itemId,
       userId,

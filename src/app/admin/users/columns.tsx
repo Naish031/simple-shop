@@ -1,4 +1,3 @@
-// src/app/admin/users/columns.tsx
 "use client";
 
 import { useState } from "react";

@@ -1,4 +1,3 @@
-//src/app/dashboard/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -26,7 +25,6 @@ export default function Dashboard() {
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const [loggingOut, setLoggingOut] = useState(false);
 
-  // Fetch inventory items
   useEffect(() => {
     const fetchItems = async () => {
       try {
@@ -58,7 +56,6 @@ export default function Dashboard() {
   const handleAction = async (id: string, action: "checkin" | "checkout") => {
     const quantity = quantities[id];
 
-    // Validation
     if (!quantity || quantity <= 0) {
       toast.error("Please enter a valid quantity greater than 0");
       return;
@@ -144,7 +141,6 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3 mb-2">
@@ -184,7 +180,6 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Inventory Table */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -300,7 +295,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Help Text */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Enter a quantity and click Check In to add items or Check Out to

@@ -1,4 +1,3 @@
-// src/app/admin/inventory/new/page.tsx
 import { Button } from "@/components/ui/button";
 import { InventoryForm } from "../components/InventoryForm";
 import Link from "next/link";

@@ -1,4 +1,3 @@
-// src/app/admin/users/data.ts
 import User from "@/models/user.models";
 import { UserTable } from "@/types/user.types";
 import { connectDB } from "@/lib/db";

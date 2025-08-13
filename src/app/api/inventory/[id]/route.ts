@@ -1,11 +1,9 @@
-// /api/inventory/[id]/route.ts
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Inventory from "@/models/inventory.model";
 import { Types } from "mongoose";
 import { requireAdmin } from "@/lib/auth";
 
-// GET one item by ID
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -33,7 +31,6 @@ export async function GET(
   }
 }
 
-// UPDATE an item by ID (admin only)
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -70,7 +67,6 @@ export async function PATCH(
   }
 }
 
-// DELETE an item by ID (admin only)
 export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ id: string }> }

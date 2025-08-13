@@ -1,5 +1,3 @@
-// src/app/admin/inventory/[id]/edit/page.tsx
-
 import { notFound } from "next/navigation";
 import { InventoryForm } from "../../components/InventoryForm";
 import Inventory from "@/models/inventory.model";
@@ -14,14 +12,11 @@ export default async function EditInventoryPage({ params }: Props) {
   await connectDB();
   const { id } = await params;
 
-  // Fetch the item from database
   const item = await Inventory.findById(id);
-  console.log("Fetched item:", item);
 
   if (!item) return notFound();
 
   // Convert Mongoose document to plain JavaScript object
-  // This removes all the complex Mongoose types and makes it simple
   const plainItem = JSON.parse(JSON.stringify(item));
 
   // Create the data object for our form
