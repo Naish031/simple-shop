@@ -31,7 +31,7 @@ const LoginPage = () => {
     }
 
     const result = await signIn("credentials", {
-      redirect: false, // handling redirection manually
+      redirect: false,
       email: formData.email,
       password: formData.password,
     });
@@ -41,13 +41,13 @@ const LoginPage = () => {
       toast.error(result.error);
     } else {
       toast.success("Login successful!");
-      router.push("/dashboard");
-      router.refresh();
+
+      router.push("/redirecting");
     }
   };
 
   const handleGoogleLogin = async () => {
-    await signIn("google", { callbackUrl: "/dashboard" });
+    await signIn("google", { callbackUrl: "/redirecting" });
   };
 
   return (

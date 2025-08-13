@@ -1,5 +1,4 @@
 // src/app/admin/users/columns.tsx
-
 "use client";
 
 import { useState } from "react";
@@ -9,8 +8,6 @@ import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { EditUserModal } from "./components/EditUserModal";
 import type { UserTable } from "@/types/user.types";
-
-
 
 function UserActions({ user }: { user: UserTable }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -94,15 +91,6 @@ export const columns: ColumnDef<UserTable>[] = [
         </Badge>
       );
     },
-  },
-  {
-    accessorKey: "isVerified",
-    header: "Verified",
-    cell: ({ row }) => (
-      <Badge variant={row.original.isVerified ? "default" : "secondary"}>
-        {row.original.isVerified ? "Yes" : "No"}
-      </Badge>
-    ),
   },
   {
     accessorKey: "isApproved",

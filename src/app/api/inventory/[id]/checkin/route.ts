@@ -3,30 +3,27 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Inventory from "@/models/inventory.model";
 import Log from "@/models/log.models";
-// import { getServerSession } from "next-auth";
-// import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDB();
   const { id: itemId } = await params;
 
-  // const session = await getServerSession(authOptions);
-  // if (!session || !session.user || !session.user.id) {
-  //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  // }
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user || !session.user.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-  // const userId = session.user.id;
+  const userId = session.user.id;
 
-  const { userId, quantity } = await req.json();
+  const { quantity } = await req.json();
 
-  if (!userId || !quantity || quantity <= 0) {
-    return NextResponse.json(
-      { error: "Invalid userId or quantity" },
-      { status: 400 }
-    );
+  if (!quantity || quantity <= 0) {
+    return NextResponse.json({ error: "Invalid quantity" }, { status: 400 });
   }
 
   try {

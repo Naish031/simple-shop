@@ -14,7 +14,7 @@ export interface MongooseInventory {
 
 export interface InventoryTableItem {
   id: string;
-  itemName: string;
+  name: string;
   category: string;
   quantity: number;
   status: "in_stock" | "low_stock" | "checked_out" | "available";

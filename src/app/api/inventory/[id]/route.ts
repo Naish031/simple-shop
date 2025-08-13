@@ -1,13 +1,15 @@
-// GET one, PUT (edit), DELETE
-
 // /api/inventory/[id]/route.ts
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Inventory from "@/models/inventory.model";
 import { Types } from "mongoose";
+import { requireAdmin } from "@/lib/auth";
 
 // GET one item by ID
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   await connectDB();
 
   try {
@@ -31,12 +33,17 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
   }
 }
 
-// UPDATE an item by ID
+// UPDATE an item by ID (admin only)
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDB();
+
+  const admin = await requireAdmin();
+  if (!admin) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
 
   try {
     const { id } = await params;
@@ -63,12 +70,17 @@ export async function PATCH(
   }
 }
 
-// DELETE an item by ID
+// DELETE an item by ID (admin only)
 export async function DELETE(
-  _: Request,
-  { params }: { params: { id: string } }
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDB();
+
+  const admin = await requireAdmin();
+  if (!admin) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
 
   try {
     const { id } = await params;

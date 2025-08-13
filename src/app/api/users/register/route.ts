@@ -43,7 +43,6 @@ export async function POST(request: NextRequest) {
       email,
       password: hashedPassword,
       role: isFirstUser ? "admin" : "user",
-      isVerified: isFirstUser,
       isApproved: isFirstUser,
     });
 

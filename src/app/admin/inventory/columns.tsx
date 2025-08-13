@@ -10,7 +10,7 @@ import type { InventoryTableItem } from "@/types/inventory.types";
 
 export const columns: ColumnDef<InventoryTableItem>[] = [
   {
-    accessorKey: "itemName",
+    accessorKey: "name",
     header: "Item Name",
   },
   {
@@ -50,7 +50,7 @@ export const columns: ColumnDef<InventoryTableItem>[] = [
       const item = row.original;
 
       const handleDelete = async () => {
-        const confirmed = confirm(`Delete ${item.itemName}?`);
+        const confirmed = confirm(`Delete ${item.name}?`);
         if (!confirmed) return;
 
         await fetch(`/api/inventory/${item.id}`, {

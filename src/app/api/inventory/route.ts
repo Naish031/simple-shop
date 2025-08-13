@@ -4,19 +4,33 @@
 import { NextResponse } from "next/server";
 import Inventory from "@/models/inventory.model";
 import { connectDB } from "@/lib/db";
+import { requireAdmin, getSession } from "@/lib/auth";
 
-// GET /api/inventory → get all inventory items
+// GET /api/inventory → get all inventory items (auth required)
 export async function GET() {
   await connectDB();
   try {
-    const items = await Inventory.find().sort({ createdAt: -1 });
-
-    if (!items || items.length === 0) {
-      return NextResponse.json({ message: "No items found" }, { status: 404 });
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Convert items to plain objects to avoid Mongoose document issues
-    const itemsPlain = items.map((item) => item.toObject());
+    const items = await Inventory.find().sort({ createdAt: -1 });
+
+    // Return 200 with [] when empty for a friendlier UX
+    if (!items || items.length === 0) {
+      return NextResponse.json([], { status: 200 });
+    }
+
+    // Convert items to plain objects and map _id to id for frontend compatibility
+    const itemsPlain = items.map((item) => {
+      const itemObj = item.toObject();
+      return {
+        ...itemObj,
+        id: itemObj._id.toString(),
+        _id: undefined,
+      };
+    });
 
     // Return the items as json
     return NextResponse.json(itemsPlain, { status: 200 });
@@ -28,9 +42,15 @@ export async function GET() {
   }
 }
 
-// POST /api/inventory → create new inventory item
+// POST /api/inventory → create new inventory item (admin only)
 export async function POST(req: Request) {
   await connectDB();
+
+  const admin = await requireAdmin();
+  if (!admin) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
+
   try {
     const body = await req.json();
     const newItem = await Inventory.create(body);

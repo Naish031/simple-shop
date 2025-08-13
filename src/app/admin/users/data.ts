@@ -19,7 +19,6 @@ export async function getUsers(): Promise<UserTable[]> {
     username: user.username,
     email: user.email,
     role: user.role,
-    isVerified: user.isVerified,
     isApproved: user.isApproved,
   }));
 }

@@ -7,6 +7,7 @@ export type LogEntry = {
   user: string;
   action: string;
   item: string;
+  quantity: number;
   timestamp: string;
 };
 
@@ -18,10 +19,18 @@ export const columns: ColumnDef<LogEntry>[] = [
   {
     accessorKey: "action",
     header: "Action",
+    cell: ({ row }) => {
+      const action = row.getValue("action") as string;
+      return action === "checkin" ? "Check-in" : "Check-out";
+    },
   },
   {
     accessorKey: "item",
     header: "Item",
+  },
+  {
+    accessorKey: "quantity",
+    header: "Quantity",
   },
   {
     accessorKey: "timestamp",
