@@ -9,7 +9,7 @@ const errorResponse = (message: string, status: number) =>
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDB();
   const session = await getServerSession(authOptions);
@@ -18,7 +18,7 @@ export async function PATCH(
     return errorResponse("Unauthorized", 401);
   }
 
-  const { id } = params;
+  const { id } = await params;
   const body = await req.json();
 
   const allowedRoles = ["admin", "user"];
@@ -59,7 +59,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDB();
   const session = await getServerSession(authOptions);
@@ -68,7 +68,7 @@ export async function DELETE(
     return errorResponse("Unauthorized", 401);
   }
 
-  const { id } = params;
+  const { id } = await params;
 
   try {
     const deletedUser = await User.findByIdAndDelete(id);

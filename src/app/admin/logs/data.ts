@@ -6,6 +6,7 @@ export const logsData: LogEntry[] = [
     user: "Ali Raza",
     action: "Checked out",
     item: "Dumbbells",
+    quantity: 2,
     timestamp: "2025-07-29T09:30:00Z",
   },
   {
@@ -13,6 +14,7 @@ export const logsData: LogEntry[] = [
     user: "Hira Khan",
     action: "Returned",
     item: "Yoga Mat",
+    quantity: 1,
     timestamp: "2025-07-28T14:45:00Z",
   },
   {
@@ -20,6 +22,7 @@ export const logsData: LogEntry[] = [
     user: "Zeeshan Malik",
     action: "Checked out",
     item: "Treadmill Key",
+    quantity: 1,
     timestamp: "2025-07-27T17:10:00Z",
   },
 ];

@@ -57,7 +57,6 @@ export const authOptions: NextAuthOptions = {
           existingUser = await User.create({
             username: profile?.name || profile?.email?.split("@")[0],
             email: profile?.email,
-            isVerified: true,
             role: "user",
             isApproved: false,
           });

@@ -4,14 +4,19 @@ export interface MongooseUser {
   _id: Types.ObjectId;
   username: string;
   email: string;
-  role: "admin" | "user";
-  isVerified: boolean;
-  isApproved: boolean;
   password?: string;
-  forgotPasswordToken?: string | null;
-  forgotPasswordExpiry?: Date | null;
-  verifyToken?: string | null;
-  verifyTokenExpiry?: Date | null;
+  role: "admin" | "user";
+  isApproved: boolean;
+  status: "pending" | "approved" | "rejected";
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export type UserTable = {
+  id: string;
+  username: string;
+  email: string;
+  role: "admin" | "user";
+  status?: "pending" | "approved" | "rejected";
+  isApproved: boolean;
+};

@@ -18,7 +18,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({
       $or: [{ username }, { email }],
     });
@@ -43,7 +42,6 @@ export async function POST(request: NextRequest) {
       email,
       password: hashedPassword,
       role: isFirstUser ? "admin" : "user",
-      isVerified: isFirstUser,
       isApproved: isFirstUser,
     });
 

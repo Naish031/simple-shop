@@ -2,13 +2,18 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { LogOut, Users, Boxes, List, Menu } from "lucide-react";
+import { LogOut, Users, Boxes, List, Menu, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
 
 const navItems = [
+  {
+    href: "/admin",
+    label: "Dashboard",
+    icon: <Home className="w-4 h-4" />,
+  },
   { href: "/admin/users", label: "Users", icon: <Users className="w-4 h-4" /> },
   {
     href: "/admin/inventory",
@@ -21,8 +26,7 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname();
 
-  const isActive = (path: string) => pathname.startsWith(path);
-
+  const isActive = (path: string) => pathname === path;
 
   const handleLogout = async () => {
     try {

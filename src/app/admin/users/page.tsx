@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { columns } from "./columns";
 import { getUsers } from "./data";
 import { DataTable } from "@/components/ui/data-table";

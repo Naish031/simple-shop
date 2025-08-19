@@ -6,49 +6,41 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { EditUserModal } from "./components/EditUserModal";
+import type { UserTable } from "@/types/user.types";
 
-export type User = {
-  id: string;
-  username: string;
-  email: string;
-  role: "admin" | "user";
-  isVerified: boolean;
-  isApproved: boolean;
-};
-
-function UserActions({ user }: { user: User }) {
+function UserActions({ user }: { user: UserTable }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
- const handleApproveClick = async () => {
-   try {
-     const res = await fetch("/api/users/approve", {
-       method: "PATCH",
-       headers: { "Content-Type": "application/json" },
-       body: JSON.stringify({ userId: user.id }),
-     });
+  const handleApproveClick = async () => {
+    try {
+      const res = await fetch("/api/users/approve", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.id }),
+      });
 
-     const data = await res.json();
-     if (!res.ok) throw new Error(data.message);
-     toast.success("User approved successfully");
-     window.location.reload();
-   } catch (error) {
-     toast.error("Failed to approve user");
-     console.error(error);
-   }
- };
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      toast.success("User approved successfully");
+      window.location.reload();
+    } catch (error) {
+      toast.error("Failed to approve user");
+      console.error(error);
+    }
+  };
 
- const handleDeleteClick = async () => {
-   try {
-     const res = await fetch(`/api/users/${user.id}`, { method: "DELETE" });
-     const data = await res.json();
-     if (!res.ok) throw new Error(data.message);
-     toast.success("User deleted successfully");
-     window.location.reload();
-   } catch (error) {
-     toast.error("Failed to delete user");
-     console.error(error);
-   }
- };
+  const handleDeleteClick = async () => {
+    try {
+      const res = await fetch(`/api/users/${user.id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      toast.success("User deleted successfully");
+      window.location.reload();
+    } catch (error) {
+      toast.error("Failed to delete user");
+      console.error(error);
+    }
+  };
 
   return (
     <div className="space-x-2">
@@ -78,7 +70,7 @@ function UserActions({ user }: { user: User }) {
   );
 }
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<UserTable>[] = [
   {
     accessorKey: "username",
     header: "Username",
@@ -91,22 +83,13 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "role",
     header: "Role",
     cell: ({ row }) => {
-      const role = row.getValue("role") as User["role"];
+      const role = row.getValue("role") as UserTable["role"];
       return (
         <Badge variant={role === "admin" ? "destructive" : "outline"}>
           {role}
         </Badge>
       );
     },
-  },
-  {
-    accessorKey: "isVerified",
-    header: "Verified",
-    cell: ({ row }) => (
-      <Badge variant={row.original.isVerified ? "default" : "secondary"}>
-        {row.original.isVerified ? "Yes" : "No"}
-      </Badge>
-    ),
   },
   {
     accessorKey: "isApproved",

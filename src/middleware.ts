@@ -10,14 +10,18 @@ export async function middleware(request: NextRequest) {
     secret: process.env.AUTH_SECRET,
   });
 
-  if (token && publicRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+  // If authenticated and hitting public routes or root, redirect by role
+  if (token && (publicRoutes.includes(pathname) || pathname === "/")) {
+    const destination = token.role === "admin" ? "/admin" : "/dashboard";
+    return NextResponse.redirect(new URL(destination, request.url));
   }
 
+  // If not authenticated and not on public route, go to login
   if (!token && !publicRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  // Protect /admin for admins only
   if (pathname.startsWith("/admin")) {
     if (!token || token.role !== "admin") {
       return NextResponse.redirect(new URL("/unauthorized", request.url));
