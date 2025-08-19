@@ -1,5 +1,7 @@
-import type { UserDocument } from "@/types/user.types";
-import { Schema, models, model } from "mongoose";
+import type { MongooseUser } from "@/types/user.types";
+import { Schema, models, model, Document } from "mongoose";
+
+export type UserDocument = MongooseUser & Document;
 
 const UserSchema = new Schema(
   {
@@ -18,7 +20,6 @@ const UserSchema = new Schema(
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
       select: false,
       minlength: [6, "Password must be at least 6 characters"],
     },
@@ -30,6 +31,10 @@ const UserSchema = new Schema(
       type: String,
       enum: ["user", "admin"],
       default: "user",
+    },
+    isApproved: {
+      type: Boolean,
+      default: false,
     },
     forgotPasswordToken: {
       type: String,
@@ -54,4 +59,5 @@ const UserSchema = new Schema(
 );
 
 const User = models?.User || model<UserDocument>("User", UserSchema);
+
 export default User;

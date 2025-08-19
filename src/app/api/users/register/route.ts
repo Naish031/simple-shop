@@ -1,4 +1,4 @@
-import { connectDB } from "@/db";
+import { connectDB } from "@/lib/db";
 import User from "@/models/user.models";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     const requestBody = await request.json();
     const { username, email, password } = requestBody;
 
-    // validation here
+    // Basic validation
     if (!username || !email || !password) {
       return NextResponse.json(
         { message: "All fields are required" },
@@ -30,21 +30,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create a new user
+    // checking if there is an existing admin user
+    const existingAdmin = await User.findOne({ role: "admin" });
+
+    const isFirstUser = !existingAdmin;
+
     const newUser = new User({
       username,
       email,
       password: hashedPassword,
+      role: isFirstUser ? "admin" : "user",
+      isVerified: isFirstUser,
+      isApproved: isFirstUser,
     });
 
     await newUser.save();
 
     return NextResponse.json(
-      { message: "User created successfully" },
+      {
+        message: isFirstUser
+          ? "Admin user created successfully"
+          : "User created successfully",
+      },
       { status: 201 }
     );
   } catch (error: Error | unknown) {
