@@ -1,4 +1,4 @@
-import { connectDB } from "@/db/index";
+import { connectDB } from "@/db";
 import User from "@/models/user.models";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
@@ -9,8 +9,6 @@ export async function POST(request: NextRequest) {
   try {
     const requestBody = await request.json();
     const { username, email, password } = requestBody;
-
-    console.log("Received register request:", requestBody);
 
     // validation here
     if (!username || !email || !password) {
@@ -27,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     if (existingUser) {
       return NextResponse.json(
-        { message: "Username or email already exists" },
+        { message: "User already exists" },
         { status: 400 }
       );
     }

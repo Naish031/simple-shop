@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
+import type { UserDocument } from "@/types/user.types";
+import { Schema, models, model } from "mongoose";
 
-const userSchema = new mongoose.Schema(
+const UserSchema = new Schema(
   {
     username: {
       type: String,
@@ -17,7 +18,8 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: [true, "Password is required"],
+      select: false,
       minlength: [6, "Password must be at least 6 characters"],
     },
     isVerified: {
@@ -51,5 +53,5 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.models.User || mongoose.model("User", userSchema);
+const User = models?.User || model<UserDocument>("User", UserSchema);
 export default User;
