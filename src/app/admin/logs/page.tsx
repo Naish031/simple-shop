@@ -24,8 +24,6 @@ export default async function LogsPage() {
     .populate("itemId", "name")
     .lean<PopulatedLog[]>();
 
-  console.log("logss from logsPage ", logs);
-
   const data: LogEntry[] = logs.map((log) => ({
     id: typeof log._id === "string" ? log._id : log._id.toString(),
     user: log.userId?.name || log.userId?.email || "Unknown",
