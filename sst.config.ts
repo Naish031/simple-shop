@@ -14,9 +14,9 @@ export default $config({
     new sst.aws.Nextjs("Web", {
       // Expose your env vars here
       environment: {
-        AUTH_SECRET:
+        NEXTAUTH_SECRET:
           $app.stage === "production"
-            ? process.env.AUTH_SECRET!
+            ? process.env.NEXTAUTH_SECRET!
             : "devsecret",
         MONGODB_URI: process.env.MONGODB_URI!,
         AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID!,

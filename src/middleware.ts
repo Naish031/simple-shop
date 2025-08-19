@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
   const publicRoutes = ["/login", "/register"];
   const token = await getToken({
     req: request,
-    secret: process.env.AUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
   });
 
   // If authenticated and hitting public routes or root, redirect by role
