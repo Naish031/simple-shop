@@ -28,7 +28,9 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const res = await fetch("/api/inventory");
+        const res = await fetch("/api/inventory", {
+          next: { revalidate: 60 },
+        });
         if (!res.ok) throw new Error("Failed to fetch items");
         const data = await res.json();
         setItems(data);
