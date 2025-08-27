@@ -42,6 +42,16 @@ next-env.d.ts
 
 # sst
 .sst
+sst-env.d.ts
 
 # open-next
 .open-next
+
+production.env
+
+aws.credentials.env
+aws-policy.json
+
+
+deploy.sh
+setup-env.sh
